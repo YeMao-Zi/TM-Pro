@@ -5,7 +5,9 @@ const useInfoStore = defineStore({
 	id: "useInfo",
 	state: () => ({
 		user: {},
-		token: '',
+		token: (uni.getStorage({
+			key: 'storage_token'
+		}) as unknown as string) || '',
 	}),
 	getters: {},
 	actions: {
@@ -15,7 +17,11 @@ const useInfoStore = defineStore({
 				sex: 1,
 			}
 		},
-		setToken(token) {
+		setToken(token: string) {
+			uni.setStorage({
+				key: 'storage_token',
+				data: token,
+			});
 			this.token = token
 		},
 	},

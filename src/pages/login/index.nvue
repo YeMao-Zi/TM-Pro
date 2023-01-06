@@ -129,7 +129,6 @@
 
 	onLoad(() => {
 		getCaptchaImageFn()
-		useInfoStore.setUserInfo()
 		setTimeout(() => {
 			const {
 				user
@@ -203,7 +202,8 @@
 			postManageLogin({
 				...e.data,
 				type: 2
-			}).then(() => {
+			}).then((res) => {
+				useInfoStore.setToken(res.data.token)
 				uni.reLaunch({
 					url: 'pages/index/index'
 				});
@@ -214,7 +214,7 @@
 	const getCaptchaImageFn = () => {
 		getCaptchaImage().then((res) => {
 			userFromData.uuid = res.data.uuid
-			codeImg.value = 'data:image/png;base64,' + res?.data.img
+			codeImg.value = 'data:image/png;base64,' + res.data.img
 		})
 	}
 
@@ -223,7 +223,8 @@
 			postManageLogin({
 				...e.data,
 				type: 1
-			}).then(() => {
+			}).then((res) => {
+				useInfoStore.setToken(res.data.token)
 				uni.reLaunch({
 					url: 'pages/index/index'
 				});
@@ -242,8 +243,7 @@
 			wxPhoneCode,
 			type
 		}).then((res) => {
-			useInfoStore.setToken(res)
-			console.log(res)
+			useInfoStore.setToken(res.data.token)
 			uni.reLaunch({
 				url: '/pages/index/index'
 			})
