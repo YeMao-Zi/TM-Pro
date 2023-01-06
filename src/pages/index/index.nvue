@@ -11,14 +11,8 @@
 						<tm-icon @click="showf=false" color="white" :font-size="32" name="tmicon-times"></tm-icon>
 					</view>
 
-					<tm-cell url="/pages/changyong/index" color="primary" :transprent="true" :margin="[10,0]"
-						title="通用组件"></tm-cell>
-					<tm-cell url="/pages/layout/index" color="primary" :transprent="true" :margin="[10,0]" title="布局组件">
-					</tm-cell>
-					<tm-cell url="/pages/showdata/index" color="primary" :transprent="true" :margin="[10,0]"
-						title="展示组件"></tm-cell>
-					<tm-cell url="/pages/form/index" color="primary" :transprent="true" :margin="[10,0]" title="表单录入">
-					</tm-cell>
+					<tm-cell url="/pages/login/index" color="primary" :transprent="true" :margin="[10,0]"
+						title="返回登陆吧"></tm-cell>
 				</view>
 			</tm-sheet>
 		</template>
