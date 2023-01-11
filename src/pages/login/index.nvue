@@ -61,7 +61,7 @@
 						<tm-form-item required label="图形码" field="code" :rules="[{required:true,message:'请输入图形码'}]">
 							<tm-input :inputPadding="[24,0,0,0]" v-model="userFromData.code">
 								<template #right>
-									<image v-if="codeImg" style="width:30%;height: 100%;" :src="codeImg"
+									<image v-if="codeImg" style="width:150rpx;height: 64rpx;" :src="codeImg"
 										@click="getCaptchaImageFn"></image>
 									<tm-text v-else>加载失败</tm-text>
 								</template>
@@ -181,14 +181,15 @@
 			type
 		}).then((res) => {
 			useInfoStore.setToken(res.data.token)
-			uni.reLaunch({
-				url: '/pages/index/index'
-			})
 		}).catch(() => {
 			msg.value.show({
 				model: 'error',
 				mask: 'false',
 				text: '授权失败'
+			})
+		}).finally(() => {
+			uni.reLaunch({
+				url: '/pages/index/index'
 			})
 		})
 	}
@@ -243,7 +244,7 @@
 		getCaptchaImage().then((res) => {
 			userFromData.uuid = res.data.uuid
 			codeImg.value = 'data:image/png;base64,' + res.data.img
-		}).finally(()=>{
+		}).finally(() => {
 			console.log('finally')
 		})
 	}
@@ -254,8 +255,8 @@
 				...e.data,
 				type: 1
 			}).then((res) => {
-				useInfoStore.setToken(res.data.token)				
-			}).finally(()=>{
+				useInfoStore.setToken(res.data.token)
+			}).finally(() => {
 				uni.reLaunch({
 					url: '/pages/index/index'
 				});
