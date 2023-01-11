@@ -123,6 +123,7 @@
 	const msg = ref < InstanceType < typeof tmMessage > | null > (null)
 	const phoneForm = ref < InstanceType < typeof tmForm > | null > (null)
 	const userForm = ref < InstanceType < typeof tmForm > | null > (null)
+
 	const {
 		useInfoStore
 	} = useStore()
@@ -168,6 +169,30 @@
 		uuid: ''
 	})
 
+	const tabschange = (cur: number) => {
+		key.value = cur
+	}
+
+	const getphonenumber = (e: any) => {
+		const wxPhoneCode = e.detail.code
+		const type = 3
+		postManageLogin({
+			wxPhoneCode,
+			type
+		}).then((res) => {
+			useInfoStore.setToken(res.data.token)
+			uni.reLaunch({
+				url: '/pages/index/index'
+			})
+		}).catch(() => {
+			msg.value.show({
+				model: 'error',
+				mask: 'false',
+				text: '授权失败'
+			})
+		})
+	}
+
 	const getPhoneCode = () => {
 		if (phoneCodeTips.value !== '获取验证码') {
 			return
@@ -203,9 +228,12 @@
 				...e.data,
 				type: 2
 			}).then((res) => {
+				console.log(res)
 				useInfoStore.setToken(res.data.token)
+			}).finally(() => {
+				console.log('888')
 				uni.reLaunch({
-					url: 'pages/index/index'
+					url: '/pages/index/index'
 				});
 			})
 		}
@@ -215,6 +243,8 @@
 		getCaptchaImage().then((res) => {
 			userFromData.uuid = res.data.uuid
 			codeImg.value = 'data:image/png;base64,' + res.data.img
+		}).finally(()=>{
+			console.log('finally')
 		})
 	}
 
@@ -224,36 +254,13 @@
 				...e.data,
 				type: 1
 			}).then((res) => {
-				useInfoStore.setToken(res.data.token)
+				useInfoStore.setToken(res.data.token)				
+			}).finally(()=>{
 				uni.reLaunch({
-					url: 'pages/index/index'
+					url: '/pages/index/index'
 				});
 			})
 		}
-	}
-
-	const tabschange = (cur: number) => {
-		key.value = cur
-	}
-
-	const getphonenumber = (e: any) => {
-		const wxPhoneCode = e.detail.code
-		const type = 3
-		postManageLogin({
-			wxPhoneCode,
-			type
-		}).then((res) => {
-			useInfoStore.setToken(res.data.token)
-			uni.reLaunch({
-				url: '/pages/index/index'
-			})
-		}).catch(() => {
-			msg.value.show({
-				model: 'error',
-				mask: 'false',
-				text: '授权失败'
-			})
-		})
 	}
 </script>
 

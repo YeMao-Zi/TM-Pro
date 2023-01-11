@@ -62,10 +62,10 @@ function afterRequestFun({ data }: any): any {
 		});
 	} else if (data.code >= 500) {
 		uni.$tm.u.toast(data.msg || '系统繁忙，请稍后再试')
-		return Promise.reject(data)
+		return data
 	} else {
 		uni.$tm.u.toast('未捕捉的错误！')
-		return Promise.reject(data)
+		return data
 	}
 }
 
