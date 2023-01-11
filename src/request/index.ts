@@ -38,7 +38,7 @@ function afterRequestFun(result: any): any {
 		uni.$tm.u.toast('身份过期')
 		return Promise.reject(data)
 	} else if (data.code >= 500) {
-		uni.$tm.u.toast(data.msg || '系统繁忙，请稍微再试')
+		uni.$tm.u.toast(data.msg || '系统繁忙，请稍后再试')
 		return Promise.reject(data)
 	} else {
 		return Promise.reject('未捕捉的错误')

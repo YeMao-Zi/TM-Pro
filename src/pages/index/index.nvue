@@ -27,7 +27,7 @@
 			</template>
 		</tm-navbar>
 
-		<tm-float-button @click="onChangeDark" :btn="{ icon: 'tmicon-ios-sunny',color:'pink',linear:'right'}">
+		<tm-float-button @click="onChangeDark" :btn="{ icon: 'tmicon-ios-sunny',color:'primary',linear:'right'}">
 		</tm-float-button>
 	</tm-app>
 </template>
