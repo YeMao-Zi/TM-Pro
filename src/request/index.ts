@@ -24,13 +24,17 @@ const config: fetchConfig = {
 	responseType: "text",
 };
 
+
+// 请求白名单
 const whiteList = ["/captchaImage", "/login"];
 
 function beforeRequestFun(newConfig: fetchConfig) {
+	// baseUrl的添加逻辑
 	if (newConfig.url && !newConfig.url.includes("http")) {
 		newConfig.url = baseUrl + newConfig.url;
 	}
 
+	// 请求头的添加逻辑
 	if (!whiteList.some((item) => newConfig.url && newConfig.url.includes(item))) {
 		newConfig.header = { ...newConfig.header, Authorization: token || "" };
 	}
@@ -43,6 +47,7 @@ function beforeRequestFun(newConfig: fetchConfig) {
 }
 
 function afterRequestFun({ data }: any): any {
+
 	uni.hideLoading();
 
 	if (data.code === 200) {
