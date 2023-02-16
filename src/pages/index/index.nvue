@@ -1,74 +1,97 @@
 <template>
-	<tm-app v-model:show-menu="showf" ref="app">
-		<template v-slot:menu="{sys}">
-			<tm-sheet :margin="[0,0]" :padding="[0,0]" color="indigo" linearDeep="accent" linear="bottom">
-				<image class="opacity-1" :style="{width:`${sys.width}px`,height:`${sys.height}px`}"
-					:src="`https://picsum.photos/${sys.width}/${sys.height}?id=${Math.random()}`" mode="scaleToFill" />
-				<view class="absolute l-0 t-0" :style="{width:`${sys.width}px`,height:`${sys.height}px`}">
-					<view :style="{height:sysinfo.sysinfo.statusBarHeight+'px'}"></view>
-					<view class="flex flex-row flex-row-center-between py-24 px-16">
-						<tm-text label="TMUI 3.0.88"></tm-text>
-						<tm-icon @click="showf=false" color="white" :font-size="32" name="tmicon-times"></tm-icon>
-					</view>
+  <tm-app v-model:show-menu="showf" ref="app">
+    <template v-slot:menu="{ sys }">
+      <tm-sheet
+        :margin="[0, 0]"
+        :padding="[0, 0]"
+        color="indigo"
+        linearDeep="accent"
+        linear="bottom"
+      >
+        <image
+          class="opacity-1"
+          :style="{ width: `${sys.width}px`, height: `${sys.height}px` }"
+          :src="`https://picsum.photos/${sys.width}/${sys.height}?id=${Math.random()}`"
+          mode="scaleToFill"
+        />
+        <view
+          class="absolute l-0 t-0"
+          :style="{ width: `${sys.width}px`, height: `${sys.height}px` }"
+        >
+          <view :style="{ height: sysinfo.sysinfo.statusBarHeight + 'px' }"></view>
+          <view class="flex flex-row flex-row-center-between py-24 px-16">
+            <tm-text label="TMUI 3.0.88"></tm-text>
+            <tm-icon
+              @click="showf = false"
+              color="white"
+              :font-size="32"
+              name="tmicon-times"
+            ></tm-icon>
+          </view>
 
-					<tm-cell url="/pages/login/index" color="primary" :transprent="true" :margin="[10,0]"
-						title="返回登陆吧"></tm-cell>
-				</view>
-			</tm-sheet>
-		</template>
+          <tm-cell
+            url="/pages/login/index"
+            color="primary"
+            :transprent="true"
+            :margin="[10, 0]"
+            title="返回登陆吧"
+          ></tm-cell>
+        </view>
+      </tm-sheet>
+    </template>
 
-		<tm-navbar :title="language('index.com.navtitle')" :shadow="0" hideHome hideBack>
-			<template v-slot:left>
-				<view class="flex flex-center flex-row">
-					<tm-icon @click="showf=true" :color="store.tmStore.dark?'primary':''" _class="px-24" :font-size="32"
-						name="tmicon-menu"></tm-icon>
-					<tm-text @click="seLocal">{{language("language")}}</tm-text>
-				</view>
-			</template>
-		</tm-navbar>
+    <tm-navbar :title="language('index.com.navtitle')" :shadow="0" hideHome hideBack>
+      <template v-slot:left>
+        <view class="flex flex-center flex-row">
+          <tm-icon
+            @click="showf = true"
+            :color="store.tmStore.dark ? 'primary' : ''"
+            _class="px-24"
+            :font-size="32"
+            name="tmicon-menu"
+          ></tm-icon>
+          <tm-text @click="seLocal">{{ language("language") }}</tm-text>
+        </view>
+      </template>
+    </tm-navbar>
 
-		<tm-float-button @click="onChangeDark" :btn="{ icon: 'tmicon-ios-sunny',color:'primary',linear:'right'}">
-		</tm-float-button>
-	</tm-app>
+    <tm-float-button
+      @click="onChangeDark"
+      :btn="{ icon: 'tmicon-ios-sunny', color: 'primary', linear: 'right' }"
+    >
+    </tm-float-button>
+  </tm-app>
 </template>
 
 <script lang="ts" setup>
-	import {
-		ref
-	} from "vue"
-	import {
-		onLoad,
-	} from "@dcloudio/uni-app";
-	import {
-		language
-	} from "@/tmui/tool/lib/language"
-	import {
-		useTmpiniaStore
-	} from '@/tmui/tool/lib/tmpinia';
-	import tmApp from "@/tmui/components/tm-app/tm-app.vue"
-	import tmSheet from "@/tmui/components/tm-sheet/tm-sheet.vue"
-	import tmFloatButton from "@/tmui/components/tm-float-button/tm-float-button.vue"
-	import tmIcon from "@/tmui/components/tm-icon/tm-icon.vue"
-	import tmNavbar from "@/tmui/components/tm-navbar/tm-navbar.vue"
-	import tmCell from "@/tmui/components/tm-cell/tm-cell.vue"
-	import tmText from "@/tmui/components/tm-text/tm-text.vue"
+import { ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
+import { language } from "@/tmui/tool/lib/language";
+import { useTmpiniaStore } from "@/tmui/tool/lib/tmpinia";
+import tmApp from "@/tmui/components/tm-app/tm-app.vue";
+import tmSheet from "@/tmui/components/tm-sheet/tm-sheet.vue";
+import tmFloatButton from "@/tmui/components/tm-float-button/tm-float-button.vue";
+import tmIcon from "@/tmui/components/tm-icon/tm-icon.vue";
+import tmNavbar from "@/tmui/components/tm-navbar/tm-navbar.vue";
+import tmCell from "@/tmui/components/tm-cell/tm-cell.vue";
+import tmText from "@/tmui/components/tm-text/tm-text.vue";
 
-	const store = useTmpiniaStore();
-	const app = ref < InstanceType < typeof tmApp > | null > (null)
-	const showf = ref(false)
-	const sysinfo = uni.$tm.u.getWindow()
+const store = useTmpiniaStore();
+const app = ref<InstanceType<typeof tmApp> | null>(null);
+const showf = ref(false);
+const sysinfo = uni.$tm.u.getWindow();
 
-	function onChangeDark() {
-		app.value?.setDark()
-	}
+function onChangeDark() {
+  app.value?.setDark();
+}
 
-	function seLocal() {
-		if (language("language") == "English-US") {
-			uni.setLocale("zh-Hans")
-		} else {
-			uni.setLocale("en")
-		}
-	}
-	
-	onLoad(() => {})
+function seLocal() {
+  if (language("language") == "English-US") {
+    uni.setLocale("zh-Hans");
+  } else {
+    uni.setLocale("en");
+  }
+}
+
+onLoad(() => {});
 </script>

@@ -46,7 +46,7 @@ function beforeRequestFun(newConfig: fetchConfig) {
 	return newConfig;
 }
 
-function afterRequestFun({ data }: any): any {
+function afterRequestFun({ data }: AnyObject){
 
 	uni.hideLoading();
 

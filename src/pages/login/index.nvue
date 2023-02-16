@@ -1,277 +1,335 @@
 <template>
-	<tm-app>
-		<tm-navbar title="登录" hideHome hideBack>
-		</tm-navbar>
+  <tm-app>
+    <tm-navbar title="登录" hideHome hideBack> </tm-navbar>
 
-		<tmSheet>
-			<tm-text label="请选择登录方式"></tm-text>
-			<tm-tabs :list="tabsTitle" :width="636" :height="300" :default-name="1" @change="tabschange"></tm-tabs>
-			<tm-divider :margin="[0,0]"></tm-divider>
-			<!-- 微信登录 -->
-			<view v-show="key===1">
-				<tm-sheet :margin="[0,0]" class="flex-center">
-					<tm-button label="微信授权登录" open-type="getPhoneNumber" @getphonenumber="getphonenumber"></tm-button>
-				</tm-sheet>
-			</view>
-			<!-- 手机验证码登录 -->
-			<view v-show="key===2">
-				<tm-sheet :margin="[0,0]" :padding="[0,0]" v-show="key===2">
-					<tm-form :margin="[0,0]" :padding="[0,0]" @submit="phoneConfirm" ref="phoneForm"
-						v-model="phoneFromData" :label-width="120">
-						<tm-form-item required label="手机号" field="loginName"
-							:rules="[{required:true,message:'请输入手机号'}]">
-							<tm-input :inputPadding="[24,0,0,0]" v-model="phoneFromData.loginName"
-								prefix="tmicon-user-fill">
-								<template #right>
-									<tm-button :disabled="phoneCodeTips!=='获取验证码'" :width="150" size="small"
-										:label="phoneCodeTips.toString() " @click="getPhoneCode"></tm-button>
-								</template>
-							</tm-input>
-						</tm-form-item>
-						<tm-form-item required label="验证码" field="phoneCode"
-							:rules="[{required:true,message:'请输入验证码'}]">
-							<!-- <tm-input v-model="phoneFromData.phoneCode" prefix="tmicon-lock-fill" showClear></tm-input> -->
-							<tm-codeinput outlined :round="4" :size="60" :count="6" @click="showKeyborad=true"
-								:value="phoneFromData.phoneCode">
-							</tm-codeinput>
-						</tm-form-item>
-						<tm-form-item :border="false">
-							<view class=" flex flex-row">
-								<view class="flex-1 mr-32">
-									<tm-button form-type="submit" label="登录" block></tm-button>
-								</view>
-							</view>
-						</tm-form-item>
-					</tm-form>
-				</tm-sheet>
-			</view>
-			<!-- 账号登录 -->
-			<view v-show="key===3">
-				<tm-sheet :margin="[0,0]" :padding="[0,0]" v-show="key===3">
-					<tm-form :margin="[0,0]" :padding="[0,0]" @submit="userConfirm" ref="userForm"
-						v-model="userFromData" :label-width="120">
-						<tm-form-item required label="账号" field="loginName" :rules="[{required:true,message:'请输入帐号'}]">
-							<tm-input v-model="userFromData.loginName" prefix="tmicon-user-fill">
-							</tm-input>
-						</tm-form-item>
-						<tm-form-item required label="密码" field="password" :rules="[{required:true,message:'请输入密码'}]">
-							<tm-input v-model="userFromData.password" password prefix="tmicon-lock-fill" showClear>
-							</tm-input>
-						</tm-form-item>
-						<tm-form-item required label="图形码" field="code" :rules="[{required:true,message:'请输入图形码'}]">
-							<tm-input :inputPadding="[24,0,0,0]" v-model="userFromData.code">
-								<template #right>
-									<image v-if="codeImg" style="width:150rpx;height: 64rpx;" :src="codeImg"
-										@click="getCaptchaImageFn"></image>
-									<tm-text v-else>加载失败</tm-text>
-								</template>
-							</tm-input>
-						</tm-form-item>
-						<tm-form-item :border="false">
-							<view class=" flex flex-row">
-								<view class="flex-1 mr-32">
-									<tm-button form-type="submit" label="登录" block></tm-button>
-								</view>
-							</view>
-						</tm-form-item>
-					</tm-form>
-				</tm-sheet>
-			</view>
-		</tmSheet>
+    <tmSheet>
+      <tm-text label="请选择登录方式"></tm-text>
+      <tm-tabs
+        :list="tabsTitle"
+        :width="636"
+        :height="300"
+        :default-name="1"
+        @change="tabschange"
+      ></tm-tabs>
+      <tm-divider :margin="[0, 0]"></tm-divider>
+      <!-- 微信登录 -->
+      <view v-show="key === 1">
+        <tm-sheet :margin="[0, 0]" class="flex-center">
+          <tm-button
+            label="微信授权登录"
+            open-type="getPhoneNumber"
+            @getphonenumber="getphonenumber"
+          ></tm-button>
+        </tm-sheet>
+      </view>
+      <!-- 手机验证码登录 -->
+      <view v-show="key === 2">
+        <tm-sheet :margin="[0, 0]" :padding="[0, 0]" v-show="key === 2">
+          <tm-form
+            :margin="[0, 0]"
+            :padding="[0, 0]"
+            @submit="phoneConfirm"
+            ref="phoneForm"
+            v-model="phoneFromData"
+            :label-width="120"
+          >
+            <tm-form-item
+              required
+              label="手机号"
+              field="loginName"
+              :rules="[{ required: true, message: '请输入手机号' }]"
+            >
+              <tm-input
+                :inputPadding="[24, 0, 0, 0]"
+                v-model="phoneFromData.loginName"
+                prefix="tmicon-user-fill"
+              >
+                <template #right>
+                  <tm-button
+                    :disabled="phoneCodeTips !== '获取验证码'"
+                    :width="150"
+                    size="small"
+                    :label="phoneCodeTips.toString()"
+                    @click="getPhoneCode"
+                  ></tm-button>
+                </template>
+              </tm-input>
+            </tm-form-item>
+            <tm-form-item
+              required
+              label="验证码"
+              field="phoneCode"
+              :rules="[{ required: true, message: '请输入验证码' }]"
+            >
+              <!-- <tm-input v-model="phoneFromData.phoneCode" prefix="tmicon-lock-fill" showClear></tm-input> -->
+              <tm-codeinput
+                outlined
+                :round="4"
+                :size="60"
+                :count="6"
+                @click="showKeyborad = true"
+                :value="phoneFromData.phoneCode"
+              >
+              </tm-codeinput>
+            </tm-form-item>
+            <tm-form-item :border="false">
+              <view class="flex flex-row">
+                <view class="flex-1 mr-32">
+                  <tm-button form-type="submit" label="登录" block></tm-button>
+                </view>
+              </view>
+            </tm-form-item>
+          </tm-form>
+        </tm-sheet>
+      </view>
+      <!-- 账号登录 -->
+      <view v-show="key === 3">
+        <tm-sheet :margin="[0, 0]" :padding="[0, 0]" v-show="key === 3">
+          <tm-form
+            :margin="[0, 0]"
+            :padding="[0, 0]"
+            @submit="userConfirm"
+            ref="userForm"
+            v-model="userFromData"
+            :label-width="120"
+          >
+            <tm-form-item
+              required
+              label="账号"
+              field="loginName"
+              :rules="[{ required: true, message: '请输入帐号' }]"
+            >
+              <tm-input v-model="userFromData.loginName" prefix="tmicon-user-fill"> </tm-input>
+            </tm-form-item>
+            <tm-form-item
+              required
+              label="密码"
+              field="password"
+              :rules="[{ required: true, message: '请输入密码' }]"
+            >
+              <tm-input
+                v-model="userFromData.password"
+                password
+                prefix="tmicon-lock-fill"
+                showClear
+              >
+              </tm-input>
+            </tm-form-item>
+            <tm-form-item
+              required
+              label="图形码"
+              field="code"
+              :rules="[{ required: true, message: '请输入图形码' }]"
+            >
+              <tm-input :inputPadding="[24, 0, 0, 0]" v-model="userFromData.code">
+                <template #right>
+                  <image
+                    v-if="codeImg"
+                    style="width: 150rpx; height: 64rpx"
+                    :src="codeImg"
+                    @click="getCaptchaImageFn"
+                  ></image>
+                  <tm-text v-else>加载失败</tm-text>
+                </template>
+              </tm-input>
+            </tm-form-item>
+            <tm-form-item :border="false">
+              <view class="flex flex-row">
+                <view class="flex-1 mr-32">
+                  <tm-button form-type="submit" label="登录" block></tm-button>
+                </view>
+              </view>
+            </tm-form-item>
+          </tm-form>
+        </tm-sheet>
+      </view>
+    </tmSheet>
 
-		<tm-message ref="msg"></tm-message>
-		<tm-keyborad :maxLength="6" v-model:show="showKeyborad" v-model="phoneFromData.phoneCode">
-		</tm-keyborad>
-	</tm-app>
+    <tm-message ref="msg"></tm-message>
+    <tm-keyborad :maxLength="6" v-model:show="showKeyborad" v-model="phoneFromData.phoneCode">
+    </tm-keyborad>
+  </tm-app>
 </template>
 
 <script setup lang="ts">
-	import {
-		reactive,
-		ref
-	} from "vue"
-	import {
-		onLoad
-	} from "@dcloudio/uni-app"
-	import useStore from "@/store"
-	import {
-		storeToRefs
-	} from 'pinia'
-	import {
-		getCaptchaImage,
-		getSmsCaptcha
-	} from '@/request/api/common'
-	import {
-		postManageLogin
-	} from "@/request/api/login/login"
-	import tmApp from "@/tmui/components/tm-app/tm-app.vue"
-	import tmNavbar from "@/tmui/components/tm-navbar/tm-navbar.vue"
-	import tmText from "@/tmui/components/tm-text/tm-text.vue"
-	import tmTabs from "@/tmui/components/tm-tabs/tm-tabs.vue"
-	import tmSheet from "@/tmui/components/tm-sheet/tm-sheet.vue"
-	import tmMessage from "@/tmui/components/tm-message/tm-message.vue"
-	import tmButton from "../../tmui/components/tm-button/tm-button.vue"
-	import tmDivider from "@/tmui/components/tm-divider/tm-divider.vue"
-	import tmFormItem from "@/tmui/components/tm-form-item/tm-form-item.vue";
-	import tmForm from "@/tmui/components/tm-form/tm-form.vue";
-	import tmInput from "@/tmui/components/tm-input/tm-input.vue";
-	import tmCodeinput from "@/tmui/components/tm-codeinput/tm-codeinput.vue"
-	import tmKeyborad from "@/tmui/components/tm-keyborad/tm-keyborad.vue"
-	import images from "@/static/images"
+import { reactive, ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
+import useStore from "@/store";
+import { storeToRefs } from "pinia";
+import { getCaptchaImage, getSmsCaptcha } from "@/request/api/common";
+import { postManageLogin } from "@/request/api/login/login";
+import tmApp from "@/tmui/components/tm-app/tm-app.vue";
+import tmNavbar from "@/tmui/components/tm-navbar/tm-navbar.vue";
+import tmText from "@/tmui/components/tm-text/tm-text.vue";
+import tmTabs from "@/tmui/components/tm-tabs/tm-tabs.vue";
+import tmSheet from "@/tmui/components/tm-sheet/tm-sheet.vue";
+import tmMessage from "@/tmui/components/tm-message/tm-message.vue";
+import tmButton from "../../tmui/components/tm-button/tm-button.vue";
+import tmDivider from "@/tmui/components/tm-divider/tm-divider.vue";
+import tmFormItem from "@/tmui/components/tm-form-item/tm-form-item.vue";
+import tmForm from "@/tmui/components/tm-form/tm-form.vue";
+import tmInput from "@/tmui/components/tm-input/tm-input.vue";
+import tmCodeinput from "@/tmui/components/tm-codeinput/tm-codeinput.vue";
+import tmKeyborad from "@/tmui/components/tm-keyborad/tm-keyborad.vue";
+import images from "@/static/images";
 
+const msg = ref<InstanceType<typeof tmMessage> | null>(null);
+const phoneForm = ref<InstanceType<typeof tmForm> | null>(null);
+const userForm = ref<InstanceType<typeof tmForm> | null>(null);
 
-	const msg = ref < InstanceType < typeof tmMessage > | null > (null)
-	const phoneForm = ref < InstanceType < typeof tmForm > | null > (null)
-	const userForm = ref < InstanceType < typeof tmForm > | null > (null)
+const { useInfoStore } = useStore();
 
-	const {
-		useInfoStore
-	} = useStore()
+onLoad(() => {
+  getCaptchaImageFn();
+  setTimeout(() => {
+    const { user } = storeToRefs(useInfoStore);
+    console.log(user);
+  }, 2000);
+});
 
-	onLoad(() => {
-		getCaptchaImageFn()
-		setTimeout(() => {
-			const {
-				user
-			} = storeToRefs(useInfoStore)
-			console.log(user)
-		}, 2000)
-	})
+const showKeyborad = ref(false);
+const key = ref(1);
+const tabsTitle = ref([
+  {
+    key: 1,
+    title: "微信",
+    icon: images.iconLoginWechat,
+  },
+  {
+    key: 2,
+    title: "手机",
+    icon: images.iconLoginPhone,
+  },
+  {
+    key: 3,
+    title: "账号",
+    icon: images.iconLoginAccount,
+  },
+]);
+const codeImg = ref("");
+const phoneCodeTips = ref<string | number>("获取验证码");
+const phoneFromData = reactive({
+  loginName: "",
+  phoneCode: "",
+});
+const userFromData = reactive({
+  loginName: "",
+  password: "",
+  code: "",
+  uuid: "",
+});
 
-	const showKeyborad = ref(false)
-	const key = ref(1)
-	const tabsTitle = ref([{
-			key: 1,
-			title: "微信",
-			icon: images.iconLoginWechat
-		},
-		{
-			key: 2,
-			title: "手机",
-			icon: images.iconLoginPhone
-		},
-		{
-			key: 3,
-			title: "账号",
-			icon: images.iconLoginAccount
-		}
-	])
-	const codeImg = ref('')
-	const phoneCodeTips = ref < string | number > ('获取验证码')
-	const phoneFromData = reactive({
-		loginName: '',
-		phoneCode: '',
-	})
-	const userFromData = reactive({
-		loginName: '',
-		password: '',
-		code: '',
-		uuid: ''
-	})
+const tabschange = (cur: number) => {
+  key.value = cur;
+};
 
-	const tabschange = (cur: number) => {
-		key.value = cur
-	}
+const getphonenumber = (e: any) => {
+  const wxPhoneCode = e.detail.code;
+  const type = 3;
+  postManageLogin({
+    wxPhoneCode,
+    type,
+  })
+    .then((res: AnyObject) => {
+      useInfoStore.setToken(res.data.token);
+    })
+    .catch(() => {
+      msg.value.show({
+        model: "error",
+        mask: "false",
+        text: "授权失败",
+      });
+    })
+    .finally(() => {
+      uni.reLaunch({
+        url: "/pages/index/index",
+      });
+    });
+};
 
-	const getphonenumber = (e: any) => {
-		const wxPhoneCode = e.detail.code
-		const type = 3
-		postManageLogin({
-			wxPhoneCode,
-			type
-		}).then((res) => {
-			useInfoStore.setToken(res.data.token)
-		}).catch(() => {
-			msg.value.show({
-				model: 'error',
-				mask: 'false',
-				text: '授权失败'
-			})
-		}).finally(() => {
-			uni.reLaunch({
-				url: '/pages/index/index'
-			})
-		})
-	}
+const getPhoneCode = () => {
+  if (phoneCodeTips.value !== "获取验证码") {
+    return;
+  }
+  if (uni.$tm.u.isEmpty(phoneFromData.loginName)) {
+    uni.$tm.u.toast("请填写手机号");
+    return;
+  }
+  if (!uni.$tm.u.isPhone(phoneFromData.loginName)) {
+    uni.$tm.u.toast("手机号有误");
+    return;
+  }
+  getSmsCaptcha({
+    phone: phoneFromData.loginName,
+  }).then((res: AnyObject) => {
+    console.log(res);
+    phoneCodeTips.value = phoneCodeTips.value == "获取验证码" ? 5 : phoneCodeTips.value;
+    let timer = setInterval(() => {
+      if (phoneCodeTips.value > 0) {
+        (phoneCodeTips.value as number)--;
+      } else {
+        phoneCodeTips.value = "获取验证码";
+        clearInterval(timer);
+      }
+    }, 1000);
+  });
+};
 
-	const getPhoneCode = () => {
-		if (phoneCodeTips.value !== '获取验证码') {
-			return
-		}
-		if (uni.$tm.u.isEmpty(phoneFromData.loginName)) {
-			uni.$tm.u.toast('请填写手机号')
-			return
-		}
-		if (!uni.$tm.u.isPhone(phoneFromData.loginName)) {
-			uni.$tm.u.toast('手机号有误')
-			return
-		}
-		getSmsCaptcha({
-			phone: phoneFromData.loginName
-		}).then((res) => {
-			console.log(res)
-			phoneCodeTips.value = phoneCodeTips.value == '获取验证码' ? 5 : phoneCodeTips.value
-			let timer = setInterval(() => {
-				if (phoneCodeTips.value > 0) {
-					(phoneCodeTips.value as number) --
-				} else {
-					phoneCodeTips.value = '获取验证码'
-					clearInterval(timer)
-				}
-			}, 1000)
+const phoneConfirm = (e: { data: any; validate: boolean }) => {
+  if (e.validate) {
+    postManageLogin({
+      ...e.data,
+      type: 2,
+    })
+      .then((res: AnyObject) => {
+        console.log(res);
+        useInfoStore.setToken(res.data.token);
+      })
+      .finally(() => {
+        console.log("888");
+        uni.reLaunch({
+          url: "/pages/index/index",
+        });
+      });
+  }
+};
 
-		})
-	}
+const getCaptchaImageFn = () => {
+  getCaptchaImage()
+    .then((res: AnyObject) => {
+      userFromData.uuid = res.data.uuid;
+      codeImg.value = "data:image/png;base64," + res.data.img;
+    })
+    .finally(() => {
+      console.log("finally");
+    });
+};
 
-	const phoneConfirm = (e: any) => {
-		if (e.validate) {
-			postManageLogin({
-				...e.data,
-				type: 2
-			}).then((res) => {
-				console.log(res)
-				useInfoStore.setToken(res.data.token)
-			}).finally(() => {
-				console.log('888')
-				uni.reLaunch({
-					url: '/pages/index/index'
-				});
-			})
-		}
-	}
-
-	const getCaptchaImageFn = () => {
-		getCaptchaImage().then((res) => {
-			userFromData.uuid = res.data.uuid
-			codeImg.value = 'data:image/png;base64,' + res.data.img
-		}).finally(() => {
-			console.log('finally')
-		})
-	}
-
-	const userConfirm = (e: any) => {
-		if (e.validate) {
-			postManageLogin({
-				...e.data,
-				type: 1
-			}).then((res) => {
-				useInfoStore.setToken(res.data.token)
-			}).finally(() => {
-				uni.reLaunch({
-					url: '/pages/index/index'
-				});
-			})
-		}
-	}
+const userConfirm = (e: { data: any; validate: boolean }) => {
+  if (e.validate) {
+    postManageLogin({
+      ...e.data,
+      type: 1,
+    })
+      .then((res: AnyObject) => {
+        useInfoStore.setToken(res.data.token);
+      })
+      .finally(() => {
+        uni.reLaunch({
+          url: "/pages/index/index",
+        });
+      });
+  }
+};
 </script>
 
 <style lang="stylus" scoped>
-	.bgimg {
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: -1;
-		width: 100%;
-		height: 100%;
-	}
+.bgimg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+}
 </style>
