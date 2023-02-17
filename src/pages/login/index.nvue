@@ -234,11 +234,11 @@ const getphonenumber = (e: any) => {
       useInfoStore.setToken(res.data.token);
     })
     .catch(() => {
-      msg.value.show({
-        model: "error",
-        mask: "false",
-        text: "授权失败",
-      });
+        msg.value?.show({
+          model: "error",
+          mask: false,
+          text: "授权失败",
+        });
     })
     .finally(() => {
       uni.reLaunch({
