@@ -5,65 +5,70 @@ import { storeToRefs } from "pinia";
 const { useInfoStore } = useStore();
 const { token } = storeToRefs(useInfoStore);
 
-export let baseUrl: string = ""; // 当要动态配置时，为空时就好了，在下方环境判断中配置。只支持两种环境，即开发和生产环境。
-!baseUrl &&
-	(baseUrl =
-		process.env.NODE_ENV === "development"
-			? "http://test.chuangjisu.com"
-			: "https://ec.zjpuyule.com");
+export let baseUrl: string = ""; // 当要动态配置时，为空时就好了，在下方环境判断中配置。
+
+if (!baseUrl) {
+  //... 配置自定义环境配置
+  //...
+  if (process.env.NODE_ENV) {
+    // hubilder 的发行环境判断。只支持两种环境，即开发和生产环境。
+    baseUrl =
+      process.env.NODE_ENV === "development"
+        ? "http://test.chuangjisu.com" // 点击发行
+        : "https://ec.zjpuyule.com"; // 点击运行
+  }
+}
 
 export const WX_APPID = "wxddf85aa6c5bdc11a";
 
 const config: fetchConfig = {
-	header: {
-		"content-type": "application/json",
-	},
-	method: "POST",
-	timeout: 60000,
-	dataType: "json",
-	responseType: "text",
+  header: {
+    "content-type": "application/json",
+  },
+  method: "POST",
+  timeout: 60000,
+  dataType: "json",
+  responseType: "text",
 };
-
 
 // 请求白名单
 const whiteList = ["/captchaImage", "/login"];
 
 function beforeRequestFun(newConfig: fetchConfig) {
-	// baseUrl的添加逻辑
-	if (newConfig.url && !newConfig.url.includes("http")) {
-		newConfig.url = baseUrl + newConfig.url;
-	}
+  // baseUrl的添加逻辑
+  if (newConfig.url && !newConfig.url.includes("http")) {
+    newConfig.url = baseUrl + newConfig.url;
+  }
 
-	// 请求头的添加逻辑
-	if (!whiteList.some((item) => newConfig.url && newConfig.url.includes(item))) {
-		newConfig.header = { ...newConfig.header, Authorization: token || "" };
-	}
+  // 请求头的添加逻辑
+  if (!whiteList.some((item) => newConfig.url && newConfig.url.includes(item))) {
+    newConfig.header = { ...newConfig.header, Authorization: token || "" };
+  }
 
-	uni.showLoading({
-		title: "加载中",
-	});
+  uni.showLoading({
+    title: "加载中",
+  });
 
-	return newConfig;
+  return newConfig;
 }
 
-function afterRequestFun({ data }: AnyObject){
+function afterRequestFun({ data }: AnyObject) {
+  uni.hideLoading();
 
-	uni.hideLoading();
-
-	if (data.code === 200) {
-		return data;
-	} else if (data.code === 401) {
-		uni.$tm.u.toast("身份过期");
-		uni.reLaunch({
-			url: "pages/login/index",
-		});
-	} else if (data.code >= 500) {
-		uni.$tm.u.toast(data.msg || "系统繁忙，请稍后再试");
-		return data;
-	} else {
-		uni.$tm.u.toast("未捕捉的错误！");
-		return data;
-	}
+  if (data.code === 200) {
+    return data;
+  } else if (data.code === 401) {
+    uni.$tm.u.toast("身份过期");
+    uni.reLaunch({
+      url: "pages/login/index",
+    });
+  } else if (data.code >= 500) {
+    uni.$tm.u.toast(data.msg || "系统繁忙，请稍后再试");
+    return data;
+  } else {
+    uni.$tm.u.toast("未捕捉的错误！");
+    return data;
+  }
 }
 
 /**
@@ -80,7 +85,7 @@ function afterRequestFun({ data }: AnyObject){
  * @returns fetch 实例
  */
 export function request(cog: fetchConfig, complete?: Function) {
-	let newConfig = { ...config, ...cog };
-	const fetch = fetchNet.request(newConfig, beforeRequestFun, afterRequestFun, complete);
-	return fetch;
+  let newConfig = { ...config, ...cog };
+  const fetch = fetchNet.request(newConfig, beforeRequestFun, afterRequestFun, complete);
+  return fetch;
 }
