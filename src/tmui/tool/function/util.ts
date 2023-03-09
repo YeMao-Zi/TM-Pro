@@ -305,7 +305,7 @@ export function getQueryString(url:string,key:string):string {
  * length 取的长度.
  */
 export function getUid (rdix=1,length=12,isAddStr=false){
-	return Math.floor(Math.random() * rdix * Math.floor(Math.random() * Date.now())).toString(isAddStr?16:10).substring(0,length);
+	return +Math.floor(Math.random() * rdix * Math.floor(Math.random() * Date.now())).toString(isAddStr?16:10).substring(0,length);
 }
 
 /*
@@ -315,10 +315,10 @@ export function getUid (rdix=1,length=12,isAddStr=false){
 	@param {Number} wait 延迟的时间
 	@param{Boolean} immediate 是否要立即执行
 */
-var timeout= getUid(1)
+var timeout: number | NodeJS.Timeout | null | undefined
 export function debounce(func:Function, wait = 500, immediate = false) {
   // 清除定时器
-  if (timeout !== null) clearTimeout(timeout);
+  if (timeout !== null) clearTimeout(timeout as NodeJS.Timeout);
   // 立即执行，此类情况一般用不到
   if (immediate) {
     var callNow = !timeout;
@@ -343,7 +343,7 @@ export function debounce(func:Function, wait = 500, immediate = false) {
  * @param {Boolean} immediate 是否立即执行
  * @return null
  */
-export function throttle(func:Function, wait = 500, immediate = true,timer=85688,flag=false) {
+export function throttle(func:Function, wait: number = 500, immediate: boolean = true,timer:any=85688,flag=false) {
 	if (immediate) {
 		if (!flag) {
 			flag = true;
@@ -606,7 +606,7 @@ export function getWindow():{width:number,height:number,top:number,bottom:number
 	
 	// #endif
 	
-	let reulst = {bottom:bottom,height:height,width:sysinfo.windowWidth,top:top,isCustomHeader:isCustomHeader,statusBarHeight:sysinfo.statusBarHeight,sysinfo:sysinfo};
+	let reulst = {bottom:bottom,height:height,width:sysinfo.windowWidth,top:top,isCustomHeader:isCustomHeader,statusBarHeight:sysinfo.statusBarHeight as number,sysinfo:sysinfo};
 	
 	return reulst;
 }

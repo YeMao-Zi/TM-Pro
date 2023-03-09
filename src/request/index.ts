@@ -1,5 +1,5 @@
 import { fetchNet } from "@/tmui/tool/lib/fetch";
-import { fetchConfig } from "@/tmui/tool/lib/interface";
+// import { fetchConfig } from "@/tmui/tool/lib/interface";
 import useStore from "@/store";
 import { storeToRefs } from "pinia";
 const { useInfoStore } = useStore();

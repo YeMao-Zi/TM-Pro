@@ -16,12 +16,12 @@
     }
   },
   "include": [
-    "./src/*.vue",
-    "./src/**/*.vue",
+    "node_modules",
+    "unpackage",
     "./src/*.nvue",
     "./src/**/*.nvue",
     "./src/*.ts",
     "./src/*.d.ts",
-    "./src/**/*.ts", "src/tmui/components/tm-render/zrender.ts11",
-    ]
+    "./src/**/*.ts",
+  ]
 }
