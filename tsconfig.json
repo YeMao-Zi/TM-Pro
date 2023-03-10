@@ -16,5 +16,12 @@
       "@/*": ["src/*"]
     }
   },
-  "include": [ "node_modules","unpackage","src/**/*.vue", "src/**/*.nvue", "src/**/*.d.ts", "src/**/*.ts"]
+  "include": [
+    "node_modules",
+    "unpackage",
+    "src/**/*.vue",
+    "src/**/*.nvue",
+    "src/**/*.d.ts",
+    "src/**/*.ts"
+  ]
 }
