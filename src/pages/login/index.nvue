@@ -13,7 +13,7 @@
       ></tm-tabs>
       <tm-divider :margin="[0, 0]"></tm-divider>
       <!-- 微信登录 -->
-      <view v-show="key === 1">
+      <view v-if="key === 1">
         <tm-sheet :margin="[0, 0]" class="flex-center">
           <tm-button
             label="微信授权登录"
@@ -23,8 +23,8 @@
         </tm-sheet>
       </view>
       <!-- 手机验证码登录 -->
-      <view v-show="key === 2">
-        <tm-sheet :margin="[0, 0]" :padding="[0, 0]" v-show="key === 2">
+      <view v-if="key === 2">
+        <tm-sheet :margin="[0, 0]" :padding="[0, 0]" v-if="key === 2">
           <tm-form
             :margin="[0, 0]"
             :padding="[0, 0]"
@@ -83,8 +83,8 @@
         </tm-sheet>
       </view>
       <!-- 账号登录 -->
-      <view v-show="key === 3">
-        <tm-sheet :margin="[0, 0]" :padding="[0, 0]" v-show="key === 3">
+      <view v-if="key === 3">
+        <tm-sheet :margin="[0, 0]" :padding="[0, 0]" v-if="key === 3">
           <tm-form
             :margin="[0, 0]"
             :padding="[0, 0]"
@@ -173,23 +173,23 @@ import tmCodeinput from "@/tmui/components/tm-codeinput/tm-codeinput.vue";
 import tmKeyborad from "@/tmui/components/tm-keyborad/tm-keyborad.vue";
 import images from "@/static/images";
 
-const msg = ref<InstanceType<typeof tmMessage> | null>(null);
-const phoneForm = ref<InstanceType<typeof tmForm> | null>(null);
-const userForm = ref<InstanceType<typeof tmForm> | null>(null);
+let msg = ref<InstanceType<typeof tmMessage> | null>(null);
+let phoneForm = ref<InstanceType<typeof tmForm> | null>(null);
+let userForm = ref<InstanceType<typeof tmForm> | null>(null);
 
-const { useInfoStore } = useStore();
+let { useInfoStore } = useStore();
 
 onLoad(() => {
   getCaptchaImageFn();
   setTimeout(() => {
-    const { user } = storeToRefs(useInfoStore);
+    let { user } = storeToRefs(useInfoStore);
     console.log(user);
   }, 2000);
 });
 
-const showKeyborad = ref(false);
-const key = ref(1);
-const tabsTitle = ref([
+let showKeyborad = ref(false);
+let key = ref(1);
+let tabsTitle = ref([
   {
     key: 1,
     title: "微信",
@@ -206,26 +206,26 @@ const tabsTitle = ref([
     icon: images.iconLoginAccount,
   },
 ]);
-const codeImg = ref("");
-const phoneCodeTips = ref<string | number>("获取验证码");
-const phoneFromData = reactive({
+let codeImg = ref("");
+let phoneCodeTips = ref<string | number>("获取验证码");
+let phoneFromData = reactive({
   loginName: "",
   phoneCode: "",
 });
-const userFromData = reactive({
+let userFromData = reactive({
   loginName: "",
   password: "",
   code: "",
   uuid: "",
 });
 
-const tabschange = (cur: number) => {
+let tabschange = (cur: number) => {
   key.value = cur;
 };
 
-const getphonenumber = (e: any) => {
-  const wxPhoneCode = e.detail.code;
-  const type = 3;
+let getphonenumber = (e: any) => {
+  let wxPhoneCode = e.detail.code;
+  let type = 3;
   postManageLogin({
     wxPhoneCode,
     type,
@@ -247,7 +247,7 @@ const getphonenumber = (e: any) => {
     });
 };
 
-const getPhoneCode = () => {
+let getPhoneCode = () => {
   if (phoneCodeTips.value !== "获取验证码") {
     return;
   }
@@ -275,7 +275,7 @@ const getPhoneCode = () => {
   });
 };
 
-const phoneConfirm = (e: { data: any; validate: boolean }) => {
+let phoneConfirm = (e: { data: any; validate: boolean }) => {
   if (e.validate) {
     postManageLogin({
       ...e.data,
@@ -294,7 +294,7 @@ const phoneConfirm = (e: { data: any; validate: boolean }) => {
   }
 };
 
-const getCaptchaImageFn = () => {
+let getCaptchaImageFn = () => {
   getCaptchaImage()
     .then((res: AnyObject) => {
       userFromData.uuid = res.data.uuid;
@@ -305,7 +305,7 @@ const getCaptchaImageFn = () => {
     });
 };
 
-const userConfirm = (e: { data: any; validate: boolean }) => {
+let userConfirm = (e: { data: any; validate: boolean }) => {
   if (e.validate) {
     postManageLogin({
       ...e.data,

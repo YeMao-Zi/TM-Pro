@@ -18,10 +18,10 @@ export default defineConfig({
 	server:{
 		// 选项写法
 		proxy:{
-			'/pag': {
-				target: 'https://cdn.tmui.design',
+			'/api': {
+				target: 'http://test.chuangjisu.com',
 				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api/, '/api')
+				rewrite: (path) => path.replace(/^\/api/, ''),
 			},
 		}
 	},

@@ -5,19 +5,7 @@ import { storeToRefs } from "pinia";
 const { useInfoStore } = useStore();
 const { token } = storeToRefs(useInfoStore);
 
-export let baseUrl: string = ""; // 当要动态配置时，为空时就好了，在下方环境判断中配置。
-
-if (!baseUrl) {
-  //... 配置自定义环境配置
-  //...
-  if (process.env.NODE_ENV) {
-    // hubilder 的发行环境判断。只支持两种环境，即开发和生产环境。
-    baseUrl =
-      process.env.NODE_ENV === "development"
-        ? "http://test.chuangjisu.com" // 点击发行
-        : "https://ec.zjpuyule.com"; // 点击运行
-  }
-}
+export let baseUrl: string = "/api"; // 当要动态配置时，为空时就好了，在下方环境判断中配置。
 
 export const WX_APPID = "wxddf85aa6c5bdc11a";
 
@@ -36,9 +24,7 @@ const whiteList = ["/captchaImage", "/login"];
 
 function beforeRequestFun(newConfig: fetchConfig) {
   // baseUrl的添加逻辑
-  if (newConfig.url && !newConfig.url.includes("http")) {
-    newConfig.url = baseUrl + newConfig.url;
-  }
+  newConfig.url = baseUrl + newConfig.url;
 
   // 请求头的添加逻辑
   if (!whiteList.some((item) => newConfig.url && newConfig.url.includes(item))) {
