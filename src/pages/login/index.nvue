@@ -296,7 +296,7 @@ let phoneConfirm = (e: { data: any; validate: boolean }) => {
 
 let getCaptchaImageFn = () => {
   getCaptchaImage()
-    .then((res: AnyObject) => {
+    .then((res) => {
       userFromData.uuid = res.data.uuid;
       codeImg.value = "data:image/png;base64," + res.data.img;
     })
@@ -311,8 +311,8 @@ let userConfirm = (e: { data: any; validate: boolean }) => {
       ...e.data,
       type: 1,
     })
-      .then((res: AnyObject) => {
-        useInfoStore.setToken(res.data.token);
+      .then((res) => {
+        useInfoStore.setToken(res.data);
       })
       .finally(() => {
         uni.reLaunch({

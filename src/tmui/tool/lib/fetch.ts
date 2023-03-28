@@ -15,7 +15,7 @@ let config: fetchConfig = {
 	firstIpv4: false
 }
 
-function request(cog: fetchConfig = config, complete?: Function, beforeRequest?: Function, afterRequest?: Function): Promise<UniApp.GeneralCallbackResult | UniApp.RequestSuccessCallbackResult> {
+function request(cog: fetchConfig = config, complete?: Function, beforeRequest?: Function, afterRequest?: Function): Promise<any> {
 	let newConfig = { ...config, ...cog }
 	return new Promise(async (resolve, reject) => {
 		if (typeof beforeRequest === 'function') {
