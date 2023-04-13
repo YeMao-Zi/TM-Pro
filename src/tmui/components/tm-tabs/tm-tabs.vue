@@ -2,7 +2,7 @@
   <view
     class="flex flex-col overflow"
     :style="[
-      props.height && !isDulitabs && cacheTabs.lenght > 0
+      props.height && !isDulitabs && cacheTabs.length > 0
         ? { height: height + 'rpx' }
         : '',
       { width: props.width + 'rpx' },
@@ -95,11 +95,11 @@
               :linear="props.itemLinear"
               :linearDeep="props.itemLinearDeep"
               borderDirection="bottom"
-              :text="item.key == _active ? modelStyle.text : false"
-              :border="item.key == _active ? modelStyle.border : 0"
-              :transprent="item.key == _active ? modelStyle.transprent : true"
+              :text="item.key === _active ? modelStyle.text : false"
+              :border="item.key === _active ? modelStyle.border : 0"
+              :transprent="item.key === _active ? modelStyle.transprent : true"
               :color="
-                props.activeColor && item.key == _active ? props.activeColor : props.color
+                props.activeColor && item.key === _active ? props.activeColor : props.color
               "
               :width="props.itemWidth"
               _class="flex-col flex-col-center-center"
@@ -120,10 +120,10 @@
                     v-if="item.icon"
                     _class="pr-5"
                     :color="
-                      item.key == _active ? props.activeFontColor : props.unSelectedColor
+                      item.key === _active ? props.activeFontColor : props.unSelectedColor
                     "
                     :font-size="
-                      item.key == _active ? props.activeFontSize : props.itemFontSize
+                      item.key === _active ? props.activeFontSize : props.itemFontSize
                     "
                     :name="item.icon"
                   >
@@ -131,11 +131,11 @@
                   <tm-text
                     :userInteractionEnabled="false"
                     :font-size="
-                      item.key == _active ? props.activeFontSize : props.itemFontSize
+                      item.key === _active ? props.activeFontSize : props.itemFontSize
                     "
-                    :_class="item.key == _active ? 'text-weight-b' : ''"
+                    :_class="item.key === _active ? 'text-weight-b' : ''"
                     :color="
-                      item.key == _active ? props.activeFontColor : props.unSelectedColor
+                      item.key === _active ? props.activeFontColor : props.unSelectedColor
                     "
                     :label="item.title"
                   >
@@ -172,7 +172,7 @@
           </view>
         </view>
         <view
-          v-if="props.showTabsLineAni && props.itemWidth > 0"
+          v-if="props.showTabsLineAni && props.itemWidth > 0 && props.showTabsLine"
           class="anilineBar absolute l-0"
           :style="{
             width: `${contentWidth}rpx`,
@@ -282,7 +282,7 @@
           </tm-sheet>
         </view>
         <view
-          v-if="props.showTabsLineAni && props.itemWidth > 0"
+          v-if="props.showTabsLineAni && props.itemWidth > 0 && props.showTabsLine"
           class="absolute l-0 b-0"
           :style="{
             width: `${contentWidth}rpx`,
@@ -381,7 +381,7 @@
           </tm-sheet>
         </view>
         <view
-          v-if="props.showTabsLineAni && props.itemWidth > 0"
+          v-if="props.showTabsLineAni && props.itemWidth > 0 && props.showTabsLine"
           class="absolute l-0 b-0"
           :style="{
             width: `${contentWidth}rpx`,
@@ -491,7 +491,6 @@ import tmText from "../tm-text/tm-text.vue";
 import tmIcon from "../tm-icon/tm-icon.vue";
 import tmBadge from "../tm-badge/tm-badge.vue";
 import { custom_props, computedClass } from "../../tool/lib/minxs";
-import { tabsobj } from "./interface";
 import { useTmpiniaStore } from "../../tool/lib/tmpinia";
 const store = useTmpiniaStore();
 // #ifdef APP-NVUE || APP-PLUS-NVUE
@@ -508,8 +507,12 @@ const props = defineProps({
   ...custom_props,
   //如果提供了，那么就不需要tm-tabs-pane，可以单独使用。
   list: {
-    type: Array as PropType<Array<tabsobj>>,
+    type: Array as PropType<Array<Tmui.tabs>>,
     default: () => [],
+  },
+  rangKey:{
+    type: String,
+    default: "title",
   },
   color: {
     type: String,
@@ -596,8 +599,11 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  /**
+   * 标题的分布方式
+   */
   align: {
-    type: String as PropType<alignType>,
+    type: String as PropType<"left" | "center" | "around" | "right">,
     default: "left", //left:左对齐,right：右对齐,center：剧中,around：剧中均分
   },
   //是否启用pane滑动切换tabs。如果关闭有助于页面更顺畅。如果启用请不要大量内容。
@@ -609,6 +615,11 @@ const props = defineProps({
   showTabsLineAni: {
     type: Boolean,
     default: false,
+  },
+  //是否显示底部线条动的底部灰色导轨
+  showTabsLine: {
+    type: Boolean,
+    default: true,
   },
   //下面活动的横线的颜色。
   tabsLineAniColor: {
@@ -684,7 +695,7 @@ const modelStyle = computed(() => {
 });
 const tmTabsId = "tmTabsId";
 const _tabPos = computed(() => props.tabPos);
-const cacheTabs = ref<Array<tabsobj>>([]);
+const cacheTabs = ref<Array<Tmui.tabs>>([]);
 
 const isDulitabs = computed(() => props.list.length > 0);
 const tabsid = "tabs_id_" + uni.$tm.u.getUid(1) + "_";
@@ -716,8 +727,8 @@ const anitLineLeft = ref(0);
 isNvue.value = true;
 // #endif
 
-let timerId = NaN;
-let timerId2 = NaN;
+let timerId:any = NaN;
+let timerId2:any = NaN;
 function debounce(func: Function, wait = 500, immediate = false) {
   // 清除定时器
   if (!isNaN(timerId)) clearTimeout(timerId);
@@ -790,8 +801,8 @@ watchEffect(() => {
   cacheTabs.value = [];
   props.list.forEach((el, index) => {
     cacheTabs.value.push({
-      key: el?.key ?? String(index),
-      title: el?.title ?? String(index),
+      key: (el?.key??el?.id) ?? String(index),
+      title: el[props.rangKey] ?? String(index),
       icon: el?.icon ?? "",
       dot: el?.dot ?? false,
       count: el?.count ?? "",
@@ -823,7 +834,7 @@ function unbindKey(key: string | number) {
   let index2: number = cacheTabs.value.findIndex((el) => el.key == _active.value);
 
   if (index2 == -1 && cacheTabs.value.length > 0) {
-    changeKey(cacheTabs.value[0].key, false, false);
+    changeKey(cacheTabs.value[0]?.key??"", false, false);
   } else if (cacheTabs.value.length == 0) {
     changeKey("", false, false);
   }
@@ -841,7 +852,7 @@ onMounted(() => {
     _scrollToId.value = tabsid + _active.value;
     nextTick(() => {
       // #ifdef APP-NVUE
-      dom.getComponentRect(proxy.$refs.tabsDom, function (res) {
+      dom.getComponentRect(proxy?.$refs?.tabsDom, function (res) {
         if (res?.size) {
           ctxLeft = Math.floor(res.size.left);
           ctxTop = Math.floor(res.size.top);
@@ -856,7 +867,7 @@ onMounted(() => {
   }, 300);
 });
 watchEffect(() => {
-  directoStyle.value = String(Math.ceil(uni.upx2px(-activeIndex.value * props.width)));
+  directoStyle.value = Math.ceil(uni.upx2px(-activeIndex.value * props.width));
   spinNvueAniEnd(0, -uni.upx2px(activeIndex.value * props.width), timeDetail);
 });
 watch(
@@ -999,7 +1010,7 @@ function setDirXy(x: number, y: number, isEnd = false) {
     if (x < maxLen || activeIndex.value <= 0) {
       directoStyle.value = -nowLeft;
     } else {
-      _active.value = cacheTabs.value[activeIndex.value - 1].key;
+      _active.value = cacheTabs.value[activeIndex.value - 1]?.key??-1;
       changeKey(_active.value, false);
     }
   }
@@ -1008,7 +1019,7 @@ function setDirXy(x: number, y: number, isEnd = false) {
     if (Math.abs(x) < maxLen || activeIndex.value >= cacheTabs.value.length - 1) {
       directoStyle.value = -nowLeft;
     } else {
-      _active.value = cacheTabs.value[activeIndex.value + 1].key;
+      _active.value = cacheTabs.value[activeIndex.value + 1]?.key??-1;
       changeKey(_active.value, false);
     }
   }
@@ -1016,10 +1027,11 @@ function setDirXy(x: number, y: number, isEnd = false) {
 
 function getEl(el: HTMLElement) {
   if (typeof el === "string" || typeof el === "number") return el;
+  // @ts-nocheck
   if (WXEnvironment) {
     return el.ref;
   } else {
-    return el instanceof HTMLElement ? el : el.$el;
+    return el instanceof HTMLElement ? el : el?.$el;
   }
 }
 onUnmounted(() => {
@@ -1053,7 +1065,7 @@ function setDirXyNvue(x: number, y: number, dirX = "none") {
       spinNvueAniEnd(-nowLeft, 0, 250);
     } else {
       // 进入上一个
-      _active.value = cacheTabs.value[activeIndex.value - 1].key;
+      _active.value = cacheTabs.value[activeIndex.value - 1]?.key??-1;
       nowLeft = uni.upx2px(activeIndex.value * props.width);
       _startx.value = nowLeft;
       spinNvueAniEnd(-nowLeft, 0, 250);
@@ -1072,7 +1084,7 @@ function setDirXyNvue(x: number, y: number, dirX = "none") {
       spinNvueAniEnd(-nowLeft, 0, 250);
     } else {
       // 进入下一个
-      _active.value = cacheTabs.value[activeIndex.value + 1].key;
+      _active.value = cacheTabs.value[activeIndex.value + 1]?.key??-1;
       nowLeft = uni.upx2px(activeIndex.value * props.width);
       _startx.value = nowLeft;
       spinNvueAniEnd(-nowLeft, 0, 250);
@@ -1085,10 +1097,10 @@ function setDirXyNvue(x: number, y: number, dirX = "none") {
 function spinNvueAni() {
   if (!props.swiper) return;
   // #ifdef APP-NVUE
-  if (!proxy.$refs?.tabsDom) return;
+  if (!proxy?.$refs?.tabsDom) return;
 
-  let icon = getEl(proxy.$refs.tabsDom);
-  let sliderBarDom = getEl(proxy.$refs.sliderBarDom);
+  let icon = getEl(proxy?.$refs?.tabsDom);
+  let sliderBarDom = getEl(proxy?.$refs?.sliderBarDom);
   let icon_bind = Binding.bind(
     {
       anchor: icon,
@@ -1101,7 +1113,7 @@ function spinNvueAni() {
         },
       ],
     },
-    function (res) {
+    function (res:any) {
       if (res.state == "end") {
         isMoveing.value = false;
         if (Math.abs(res.deltaY) > 80) {
@@ -1127,9 +1139,9 @@ function spinNvueAni() {
 function spinNvueAniEnd(start: number, end: number, time = timeDetail) {
   if (!props.swiper) return;
   // #ifdef APP-NVUE
-  if (!proxy.$refs?.tabsDom) return;
+  if (!proxy?.$refs?.tabsDom) return;
   animation.transition(
-    proxy.$refs.tabsDom,
+    proxy?.$refs?.tabsDom,
     {
       styles: {
         transform: `translateX(${start + end}px)`,
@@ -1145,7 +1157,7 @@ function spinNvueAniEnd(start: number, end: number, time = timeDetail) {
   // #endif
 }
 
-function pushKey(o: tabsobj) {
+function pushKey(o: Tmui.tabs) {
   let index: number = cacheTabs.value.findIndex((el) => el.key === o.key);
   if (index > -1) {
     cacheTabs.value.splice(index, 1, {
@@ -1157,7 +1169,7 @@ function pushKey(o: tabsobj) {
   }
 
   if (_active.value == "") {
-    changeKey(cacheTabs.value[0].key, false);
+    changeKey(cacheTabs.value[0]?.key??-1, false);
   }
 }
 
@@ -1181,7 +1193,7 @@ function changeKey(key: string | number, isclick = true, isNomarlChange = true) 
   }
 }
 
-function setTitle(o: tabsobj) {
+function setTitle(o: Tmui.tabs) {
   let index: number = cacheTabs.value.findIndex((el) => el.key == o.key);
   if (index > -1) {
     cacheTabs.value.splice(index, 1, o);

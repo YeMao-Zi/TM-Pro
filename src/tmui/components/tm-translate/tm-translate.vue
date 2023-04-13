@@ -174,12 +174,12 @@ function play() {
   clearTimeout(tmid.value);
   nextTick(function () {
     tmid.value = setTimeout(function () {
-      nvueAmatons();
+		emits("start");
+		nvueAmatons();
     }, 50);
   });
   // #endif
-  // #ifndef APP-PLUS-NVUE
-
+  // #ifndef APP-NVUE
   noNvueAmations();
   // #endif
 }
@@ -275,15 +275,18 @@ function nvueAmatons() {
 }
 function noNvueAmations() {
   clearTimeout(tmid.value);
-  // animationData.value = null;
   tmid.value = setTimeout(() => {
     if (computedReverse.value) {
       animationClassName.value = animationName.value;
     } else {
       animationClassName.value = animationName.value + "-reverse";
     }
+	tmid.value = setTimeout(() => {
+	  emits("end");
+	}, props.duration);
+	
   }, 20);
-  return;
+  
 }
 </script>
 
@@ -296,44 +299,90 @@ function noNvueAmations() {
 }
 
 .up {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateY(0%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  top:0vh;
+  /* #endif */
 }
 
 .up-reverse {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateY(-101%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  top:-100vh;
+  /* #endif */
 }
 
 .down {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateY(0%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  top:0vh;
+  /* #endif */
+
 }
 
 .down-reverse {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateY(101%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  top:100vh;
+  /* #endif */
 }
 
 .left {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateX(0%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  left: 0%;
+  /* #endif */
 }
 
 .left-reverse {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateX(-101%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  left: -101%;
+  /* #endif */
 }
 
 .right {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateX(0%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  left: 0%;
+  /* #endif */
 }
 
 .right-reverse {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: translateX(101%);
+  /* #endif */
+  /* #ifndef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
+  left: 101%;
+  /* #endif */
 }
 
 .zoom {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: scale(0.7, 0.7);
+  /* #endif */
   opacity: 0;
 }
 
 .zoom-reverse {
+  /* #ifdef APP-NVUE || MP-WEIXIN || MP-ALIPAY || H5 */
   transform: scale(1, 1);
+  /* #endif */
   opacity: 1;
+  
 }
 </style>

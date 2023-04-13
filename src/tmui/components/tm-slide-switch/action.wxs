@@ -1,14 +1,13 @@
 var THRESHOLD = 0.3;
 var MIN_DISTANCE = 10;
 var owner;
-var state;
-
-var getState = function(ownerInstance) {
+var state={
+	leftWidth:0,
+	rightWidth:0,
+};
+var getState = function(ownerInstance,prop) {
 	owner = ownerInstance;
-	state = owner.getState();
-	var lefrightwidth = owner.callMethod('getLeftRightwidth') ||{left:0,right:0}
-	state.leftWidth = lefrightwidth.left || 120;
-	state.rightWidth = lefrightwidth.right || 120;
+	
 	state.offset = state.offset || 0;
 	state.startOffset = state.startOffset || 0;
 	state.opened = state.opened || false;
@@ -97,6 +96,7 @@ var swipeMove = function(_offset) {
 
 var close = function() {
 	swipeMove(0);
+	state.opened = false;
 };
 
 var onCloseChange = function(newVal, oldVal, ownerInstance) {
@@ -117,6 +117,7 @@ var onOpenedChange = function(newVal, oldVal, ownerInstance) {
 };
 
 var touchStart = function(event) {
+	console.log(event)
 	resetTouchStatus();
 	state.startOffset = state.offset;
 	var touchPoint = event.touches[0];
@@ -126,6 +127,11 @@ var touchStart = function(event) {
 };
 
 var startDrag = function(event, ownerInstance) {
+	var prop = event.currentTarget.dataset.prop;
+	console.log(prop)
+	state.leftWidth =prop.leftWidth || 120;
+	state.rightWidth = prop.rightWidth || 120;
+	
 	getState(ownerInstance);
 	touchStart(event);
 	// onOpenedChange
@@ -146,7 +152,9 @@ var open = function(position) {
 	owner.callMethod('open', {
 		position: position
 	});
+	state.opened = true;
 	swipeMove(_offset);
+	console.log(owner)
 };
 
 var endDrag = function(event, ownerInstance) {
@@ -169,6 +177,7 @@ var endDrag = function(event, ownerInstance) {
 		// 仅在有发生侧滑的情况下自动关闭（由js控制是否异步关闭）
 		if (state.startOffset !== state.offset) {
 			close();
+			
 		}
 	}
 };

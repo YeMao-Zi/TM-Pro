@@ -35,7 +35,7 @@
           ></tm-icon>
           <tm-text
             :font-size="30"
-            _class="pt-8 text-overflow-1"
+            :_class="`pt-8 text-overflow-${_lines}`"
             :label="text_ref"
           ></tm-text>
         </view>
@@ -117,6 +117,10 @@ const props = defineProps({
     type: Number,
     default: 300,
   },
+  lines:{
+    type: Number,
+    default: 1,
+  },
 });
 
 const sysinfo = inject(
@@ -134,6 +138,7 @@ const sysinfo = inject(
 );
 const _width = computed(() => sysinfo.value.width);
 const _height = computed(() => sysinfo.value.height);
+const _lines = computed(()=>props.lines)
 let isNvue = ref(false);
 // #ifdef APP-NVUE
 isNvue.value = true;

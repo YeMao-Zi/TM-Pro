@@ -219,7 +219,9 @@ const fontSizeComputed = computed(() => {
 const isImg = computed(() => {
   if (
     props.name[0] == "." ||
+    props.name[0] == "@" ||
     props.name[0] == "/" ||
+    props.name[0] == "~" ||
     props.name.substring(0, 5) == "data:" ||
     props.name.substring(0, 4) == "http" ||
     props.name.substring(0, 5) == "https" ||
@@ -250,8 +252,8 @@ const iconComputed = computed(() => {
         return JSON.parse(ucode);
     }else if(props.customicon){
 		let names = name.split('-')
-		if(names.length===2){
-			let ucode = '"\\u' + String(names[1]) + '"';
+		if(names.length>=2){
+			let ucode = '"\\u' + String(names[names.length-1]) + '"'
 			return JSON.parse(ucode);
 		}
 	}

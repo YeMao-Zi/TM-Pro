@@ -20,7 +20,7 @@
                         <view class="flex flex-row flex-row-center-start">
                             <tm-text :font-size="24" :color="props.color" label="￥"></tm-text>
                             <tm-text :font-size="42"  _class="text-weight-b" :color="props.color" :label="nowItemInfo.price"></tm-text>
-                            <tm-sheet v-if="nowItemInfo.yuanjia!==nowItemInfo.price" linear="left" linear-deep="accent" :color="props.color" :margin="[24,0]" :padding="[18,4]" :round="24">
+                            <tm-sheet linear="left" linear-deep="accent" :color="props.color" :margin="[24,0]" :padding="[18,4]" :round="24">
                                 <view class="flex flex-row flex-row-center-start">
                                     <tm-text :font-size="24" label="优惠价￥"></tm-text>
                                     <tm-text :font-size="42" _class="text-weight-b" :label="nowItemInfo.yuanjia"></tm-text>
@@ -67,8 +67,8 @@
         <template v-slot:foot>
             <view class="mb-20 px-24">
                 <view style="height:40rpx" class="flex flex-row flex-row-center-center">
-                    <tm-text class="mr-20" v-if="nowItemInfo.tip" :color="props.color" :label="nowItemInfo.tip"></tm-text>
-                    <tm-text v-if="nowItemInfo.max<=nowInputNumber" :color="props.color" label="库存不足"></tm-text>
+                    <tm-text v-if="nowItemInfo.tip" :color="props.color" :label="nowItemInfo.tip+'，'"></tm-text>
+                    <tm-text v-if="nowItemInfo.max<nowInputNumber" :color="props.color" label="库存不足"></tm-text>
                 </view>
                 <view class="flex flex-row">
                     <view style="width:363rpx">

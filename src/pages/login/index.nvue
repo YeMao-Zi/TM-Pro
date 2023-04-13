@@ -323,7 +323,7 @@ let userConfirm = (e: { data: any; validate: boolean }) => {
 };
 </script>
 
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
 .bgimg {
 	position: fixed;
 	top: 0;

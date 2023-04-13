@@ -7,7 +7,9 @@ import App from "./App.vue";
 export function createApp() {
   const app = createSSRApp(App);
   app.use(Pinia.createPinia());
-  app.use(tmui)
+  app.use(tmui,{
+    theme:"#000"
+  })
   return {
     app,
     Pinia

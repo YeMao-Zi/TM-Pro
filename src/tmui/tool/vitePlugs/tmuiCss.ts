@@ -2,8 +2,10 @@
  * 作者 tmui | https://tmui.design
  * 版权:本插件只服务于tmui组件库,不得移植复制到任何地方使用,侵权必究.
  */
-import { normalizePath, PluginOption } from 'vite'
-export default function(opts?:any):PluginOption{
+import { normalizePath } from 'vite'
+import {path} from "path"
+import * as file from "fs"
+export default function(opts?:any){
     return {
         name:"tmui-vite-css",
 		// 该插件在 plugin-vue 插件之前执行，这样就可以直接解析到原模板文件
